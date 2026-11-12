@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Prosper Billion Trading - Loading</title>
+    <!-- Include Telegram Web App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-green: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        /* Splash Container */
+        .splash-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            max-width: 320px;
+            width: 100%;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        /* Logo Pulse Animation */
+        .logo-box {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            margin-bottom: 24px;
+        }
+
+        .logo-box svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--accent-green);
+            animation: pulseGlow 2s infinite ease-in-out;
+        }
+
+        /* App Title */
+        h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 36px;
+        }
+
+        /* Progress Bar Container */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        /* Animated Progress Fill */
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #059669, #10b981);
+            border-radius: 3px;
+            transition: width 0.3s ease-out;
+        }
+
+        /* Status Text */
+        .status-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.08); opacity: 1; filter: drop-shadow(0 0 8px rgba(16,185,129,0.6)); }
+        }
+
+        /* Hidden class for smooth transition out */
+        .fade-out {
+            opacity: 0;
+            transition: opacity 0.4s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="splash-wrapper" id="splashScreen">
+        <!-- Trading Bull / Chart Icon -->
+        <div class="logo-box">
+            <svg viewBox="0 0 24 24">
+                <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+            </svg>
+        </div>
+
+        <h1>Prosper Billion Signals</h1>
+        <p class="subtitle">Secure XAU/USD & Crypto Terminal</p>
+
+        <!-- Loader Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="status-text" id="statusText">Initializing Telegram environment...</div>
+    </div>
+
+    <script>
+        // Initialize Telegram Web App Context
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand(); // Expands mini app to full screen
+
+        const progressBar = document.getElementById('progressBar');
+        const statusText = document.getElementById('statusText');
+        const splashScreen = document.getElementById('splashScreen');
+
+        // Simulated loading sequence steps for market data & user authentication
+        const loadingSteps = [
+            { progress: 20, text: "Connecting to secure node..." },
+            { progress: 45, text: "Authenticating Telegram user..." },
+            { progress: 75, text: "Syncing live XAU/USD feeds..." },
+            { progress: 95, text: "Finalizing trading terminal..." },
+            { progress: 100, text: "Ready!" }
+        ];
+
+        let currentStep = 0;
+
+        function runLoader() {
+            if (currentStep < loadingSteps.length) {
+                let step = loadingSteps[currentStep];
+                progressBar.style.width = step.progress + '%';
+                statusText.innerText = step.text;
+                currentStep++;
+                
+                // Speed up or space out based on simulated network load
+                setTimeout(runLoader, 250); 
+            } else {
+                // Transition out once loaded
+                setTimeout(() => {
+                    splashScreen.classList.add('fade-out');
+                    setTimeout(() => {
+                        window.location.href = "dashboard.html"; // Redirect to main app page or load app UI
+                    }, 400);
+                }, 200);
+            }
+        }
+
+        // Start loading sequence immediately
+        window.onload = () => {
+            setTimeout(runLoader, 150);
+        };
+    </script>
+</body>
+</html>
+
